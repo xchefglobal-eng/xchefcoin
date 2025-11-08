@@ -5,24 +5,56 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>XCHEF Registration</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:linear-gradient(135deg,#ff7a18,#ff3a6b);color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh}
-    .card{background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);padding:24px;border-radius:12px;max-width:480px;width:95%}
-    h1{margin:0 0 8px;font-size:20px;text-align:center}
-    p.subtitle{opacity:0.95;margin:0 0 16px;text-align:center}
-    label{display:block;font-size:13px;margin:12px 0 6px}
-    input,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#fff}
-    .row{display:flex;gap:8px}
-    .row > *{flex:1}
-    .btn{margin-top:16px;padding:12px;width:100%;border-radius:10px;border:0;background:#fff;color:#111;font-weight:700;cursor:pointer}
-    .msg{margin-top:12px;font-size:14px}
-    small{opacity:0.9}
-    a.link{color:#fff;text-decoration:underline}
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      margin: 0;
+      background: linear-gradient(135deg, #ff7a18, #ff3a6b);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px);
+      padding: 24px;
+      border-radius: 12px;
+      max-width: 480px;
+      width: 95%;
+      text-align: center;
+      position: relative;
+    }
+    h1 { margin:0 0 8px; font-size:20px; }
+    p.subtitle { opacity:0.95; margin:0 0 16px; }
+    label { display:block; font-size:13px; margin:12px 0 6px; text-align:left; }
+    input, select { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#fff; }
+    .btn { margin-top:16px; padding:12px; width:100%; border-radius:10px; border:0; background:#fff; color:#111; font-weight:700; cursor:pointer; }
+    .msg { margin-top:12px; font-size:14px; min-height:20px; }
+    small { opacity:0.9; display:block; margin-top:16px; }
+    
+    /* Spinner Coin */
+    .spinner-container { display:none; flex-direction:column; align-items:center; justify-content:center; }
+    .coin {
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at 30% 30%, #ffd700, #ffae00);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      animation: spin 2s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .thank-you { font-size:18px; font-weight:700; }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Register for XCHEF Launch</h1>
-    <p class="subtitle">Please fill in your details to have a chance to win bonus coins.</p>
+    <p class="subtitle">Fill in your details to have a chance to win bonus coins.</p>
 
     <form id="regForm">
       <label for="firstname">First Name</label>
@@ -56,19 +88,20 @@
 
     <div class="msg" id="message"></div>
 
+    <div class="spinner-container" id="spinnerContainer">
+      <div class="coin"></div>
+      <div class="thank-you">Thank you! You are subscribed.</div>
+    </div>
+
     <hr style="margin:16px 0;border:none;border-top:1px solid rgba(255,255,255,0.06)">
-    <small>How is the data stored? Read instructions below.</small>
+    <small>How is your data stored? your data is savely stored with google AppScript.who is having access to my data ? only the Founder have access to sensitive data .</small>
   </div>
 
   <script>
-    // === CONFIG ===
-    // Replace WEBHOOK_URL with your endpoint (Google Apps Script web app URL or Formspree/Airtable endpoint)
-    const WEBHOOK_URL = "
-      https://script.google.com/macros/s/AKfycbyPEage-DeeFEkyor-bRTAFgTqebGg-Q0nK9U1ofPVaBbgD6IHaBpxNkN6Hog_VkwwY/exec";
-    // =================
-
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyPEage-DeeFEkyor-bRTAFgTqebGg-Q0nK9U1ofPVaBbgD6IHaBpxNkN6Hog_VkwwY/exec";
     const form = document.getElementById('regForm');
     const msg = document.getElementById('message');
+    const spinnerContainer = document.getElementById('spinnerContainer');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -83,49 +116,30 @@
         ts: new Date().toISOString()
       };
 
-      // 1) Try to POST to your serverless endpoint (replace WEBHOOK_URL above)
-      if (WEBHOOK_URL && WEBHOOK_URL !== 'https://xchefglobal-eng.github.io/xchefcoin/') {
-        try {
-          const res = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          });
-          if (res.ok) {
-            msg.textContent = 'Thank you — your data has been stored.';
-            form.reset();
-            return;
-          } else {
-            const text = await res.text();
-            console.warn('Server error:', text);
-            msg.textContent = 'Server error. Data will be stored locally.';
-          }
-        } catch (err) {
-          console.warn('Post failed', err);
-          msg.textContent = 'Connection error. Data will be stored locally.';
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (res.ok) {
+          // Show spinning coin + thank you
+          form.style.display = 'none';
+          msg.style.display = 'none';
+          spinnerContainer.style.display = 'flex';
+          return;
+        } else {
+          msg.textContent = 'Server error. Data will be stored locally.';
         }
+      } catch (err) {
+        msg.textContent = 'Connection error. Data will be stored locally.';
       }
 
-      // 2) Fallback: save locally in browser so you can test (not shared)
+      // Fallback: save locally
       let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
       local.push(data);
       localStorage.setItem('xchef_regs', JSON.stringify(local));
-      msg.textContent = 'Stored locally in your browser. (Production: replace WEBHOOK_URL)';
-      form.reset();
     });
-
-    // Helper: allow easy export of localStorage entries to CSV by visiting /?export=1
-    if (location.search.includes('export=1')) {
-      const rows = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
-      if (rows.length === 0) { document.body.innerHTML = '<pre>No local registrations found.</pre>'; }
-      else {
-        const keys = Object.keys(rows[0]);
-        const csv = [keys.join(',')].concat(rows.map(r => keys.map(k => '"' + (r[k] || '').toString().replace(/"/g,'""') + '"').join(','))).join('\n');
-        const blob = new Blob([csv], {type: 'text/csv'});
-        const url = URL.createObjectURL(blob);
-        document.body.innerHTML = '<a href="'+url+'" download="xchef_regs.csv">Download registrations (CSV)</a>';
-      }
-    }
   </script>
 </body>
 </html>
