@@ -94,89 +94,78 @@
     <p class="subtitle">Fill in your details and get rewarded with xchefbonuscoins on LAUNCH DAY.</p>
 
     <form id="regForm">
-      <label for="firstname">First Name</label>
-      <input id="firstname" name="firstname" placeholder="Jan-Lucas" required>
+  <label for="firstname">First Name</label>
+  <input id="firstname" name="firstname" placeholder="Jan-Lucas" required>
 
-      <label for="lastname">Last Name</label>
-      <input id="lastname" name="lastname" placeholder="Sandrock" required>
+  <label for="lastname">Last Name</label>
+  <input id="lastname" name="lastname" placeholder="Sandrock" required>
 
-      <label for="province">Province</label>
-      <select id="province" name="province" required>
-        <option value="">Select province...</option>
-        <option>Western Cape</option>
-        <option>Eastern Cape</option>
-        <option>KwaZulu-Natal</option>
-        <option>Gauteng</option>
-        <option>Free State</option>
-        <option>Limpopo</option>
-        <option>Mpumalanga</option>
-        <option>Northern Cape</option>
-        <option>North West</option>
-      </select>
+  <label for="province">Province</label>
+  <select id="province" name="province" required>
+    <option value="">Select province...</option>
+    <option>Western Cape</option>
+    <option>Eastern Cape</option>
+    <option>KwaZulu-Natal</option>
+    <option>Gauteng</option>
+    <option>Free State</option>
+    <option>Limpopo</option>
+    <option>Mpumalanga</option>
+    <option>Northern Cape</option>
+    <option>North West</option>
+  </select>
 
-      <label for="cell">Phone Number</label>
-      <input id="cell" name="cell" placeholder="082 767 7256" pattern="[0-9\s()\+-]{7,20}" required>
+  <label for="cell">Mobile Number</label>
+  <input id="cell" name="cell" placeholder="082 767 7256"
+         pattern="[0-9\s()\-+]{7,20}" required>
 
-      <label for="wallet">Wallet Address (optional)</label>
-      <input id="wallet" name="wallet" placeholder="0x..." >
+  <label for="wallet">Wallet Address (optional)</label>
+  <input id="wallet" name="wallet" placeholder="0x...">
 
-      <button class="btn" type="submit">Submit</button>
-    </form>
+  <button type="submit">Submit</button>
+</form>
 
-    <div class="msg" id="message"></div>
+<div id="message"></div>
 
-    <div class="spinner-container" id="spinnerContainer">
-  <div class="coin-glow"></div>
-  <div class="thank-you">Thank you! You are subscribed.</div>
-</div>
+<script>
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwRMToweEJkeTMKRBZQEQvTt1ZI837tPDkbKMYy10kU0HcVCCGMo8KXysT2ItrqoA0/exec";
 
-    <hr style="margin:16px 0;border:none;border-top:1px solid rgba(255,255,255,0.06)">
-    <small>How is your data stored? your data is savely stored with google AppScript.who is having access to my data ? only the Founder have access to sensitive data .</small>
-  </div>
+const form = document.getElementById('regForm');
+const msg = document.getElementById('message');
 
-  <script>
-    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwRMToweEJkeTMKRBZQEQvTt1ZI837tPDkbKMYy10kU0HcVCCGMo8KXysT2ItrqoA0/exec";
-    const form = document.getElementById('regForm');
-    const msg = document.getElementById('message');
-    const spinnerContainer = document.getElementById('spinnerContainer');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  msg.textContent = 'Sending...';
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      msg.textContent = 'Sending...';
+  const data = {
+    firstname: form.firstname.value.trim(),
+    lastname: form.lastname.value.trim(),
+    province: form.province.value,
+    cell: form.cell.value.trim(),
+    wallet: form.wallet.value.trim()
+  };
 
-      const data = {
-        firstname: form.firstname.value.trim(),
-        lastname: form.lastname.value.trim(),
-        province: form.province.value,
-        cell: form.cell.value.trim(),
-        wallet: form.wallet.value.trim(),
-        ts: new Date().toISOString()
-      };
-
-      try {
-        const res = await fetch(WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        if (res.ok) {
-          // Show spinning coin + thank you
-          form.style.display = 'none';
-          msg.style.display = 'none';
-          spinnerContainer.style.display = 'flex';
-          return;
-        } else {
-          msg.textContent = 'Server error. Data will be stored locally.';
-        }
-      } catch (err) {
-        msg.textContent = 'Connection error. Data will be stored locally.';
-      }
-
-      // Fallback: save locally
-      let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
-      local.push(data);
-      localStorage.setItem('xchef_regs', JSON.stringify(local));
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
-  </script>
+    const json = await res.json();
+    if (json.status === "success") {
+      msg.textContent = 'Thank you — your information has been sent and stored.';
+      form.reset();
+    } else {
+      msg.textContent = 'Server error: ' + json.message;
+    }
+  } catch (err) {
+    console.warn('Post failed', err);
+    msg.textContent = 'Connection error. Data will be stored locally.';
+    let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
+    local.push(data);
+    localStorage.setItem('xchef_regs', JSON.stringify(local));
+  }
+});
+</script>
+
 </body>
 </html>
