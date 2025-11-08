@@ -35,19 +35,56 @@
     
     /* Spinner Coin */
     .spinner-container { display:none; flex-direction:column; align-items:center; justify-content:center; }
-    .coin {
-      width: 100px;
-      height: 100px;
-      background: radial-gradient(circle at 30% 30%, #ffd700, #ffae00);
-      border-radius: 50%;
-      border: 3px solid #fff;
-      animation: spin 2s linear infinite;
-      margin-bottom: 16px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    .coin-glow {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at 30% 30%, #ffd700, #ffae00);
+  border-radius: 50%;
+  border: 3px solid #fff;
+  position: relative;
+  animation: spin 3s linear infinite, glow 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 20px #ffd700, 0 0 40px #ffae00, 0 0 60px #ffda55;
+  margin-bottom: 16px;
+}
+
+/* Spin animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Glow pulse animation */
+@keyframes glow {
+  0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #ffae00, 0 0 45px #ffda55; }
+  100% { box-shadow: 0 0 25px #ffd700, 0 0 50px #ffae00, 0 0 70px #ffda55; }
+}
+
+/* Optional sparkles */
+.coin-glow::before, .coin-glow::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  top: 20%;
+  left: 80%;
+  box-shadow: 0 0 8px #fff, 0 0 15px #ffd700;
+  animation: sparkle 2s linear infinite;
+}
+
+.coin-glow::after {
+  top: 70%;
+  left: 10%;
+  animation-delay: 1s;
+}
+
+@keyframes sparkle {
+  0% { transform: scale(0.5); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.5); opacity: 0.5; }
+}
+
     .thank-you { font-size:18px; font-weight:700; }
   </style>
 </head>
