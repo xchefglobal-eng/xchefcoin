@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XCHEF Registration</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:linear-gradient(135deg,#ff7a18,#ff3a6b);color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .card{background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);padding:24px;border-radius:12px;max-width:480px;width:95%}
+    h1{margin:0 0 8px;font-size:20px;text-align:center}
+    p.subtitle{opacity:0.95;margin:0 0 16px;text-align:center}
+    label{display:block;font-size:13px;margin:12px 0 6px}
+    input,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#fff}
+    .row{display:flex;gap:8px}
+    .row > *{flex:1}
+    .btn{margin-top:16px;padding:12px;width:100%;border-radius:10px;border:0;background:#fff;color:#111;font-weight:700;cursor:pointer}
+    .msg{margin-top:12px;font-size:14px}
+    small{opacity:0.9}
+    a.link{color:#fff;text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Skryf in vir XCHEF Launch</h1>
+    <p class="subtitle">Vul asseblief jou besonderhede in om kans te staan op bonus-muntstukke.</p>
+
+    <form id="regForm">
+      <label for="firstname">Naam</label>
+      <input id="firstname" name="firstname" placeholder="Jan-Lucas" required>
+
+      <label for="lastname">Van</label>
+      <input id="lastname" name="lastname" placeholder="Sandrock" required>
+
+      <label for="province">Provinsie</label>
+      <select id="province" name="province" required>
+        <option value="">Kies provinsie...</option>
+        <option>Western Cape</option>
+        <option>Eastern Cape</option>
+        <option>KwaZulu-Natal</option>
+        <option>Gauteng</option>
+        <option>Free State</option>
+        <option>Limpopo</option>
+        <option>Mpumalanga</option>
+        <option>Northern Cape</option>
+        <option>North West</option>
+      </select>
+
+      <label for="cell">Selfoon nommer</label>
+      <input id="cell" name="cell" placeholder="082 767 7256" pattern="[0-9\s+()-]{7,20}" required>
+
+      <label for="wallet">Wallet address (opsioneel)</label>
+      <input id="wallet" name="wallet" placeholder="0x..." >
+
+      <button class="btn" type="submit">Submit</button>
+    </form>
+
+    <div class="msg" id="message"></div>
+
+    <hr style="margin:16px 0;border:none;border-top:1px solid rgba(255,255,255,0.06)">
+    <small>Hoe word data gestoor? Lees instruksies hieronder.</small>
+  </div>
+
+  <script>
+    // === CONFIG ===
+    // Replace WEBHOOK_URL with your endpoint (Google Apps Script web app URL or Formspree/Airtable endpoint)
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyxeCXU8HnoRIza5gzyHAgTqv6h3AkQF1h83LO1O0usckgJi5OhVItg00JiTvPMayVe/exec";
+    // =================
+
+    const form = document.getElementById('regForm');
+    const msg = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Stuur...';
+
+      const data = {
+        firstname: form.firstname.value.trim(),
+        lastname: form.lastname.value.trim(),
+        province: form.province.value,
+        cell: form.cell.value.trim(),
+        wallet: form.wallet.value.trim(),
+        ts: new Date().toISOString()
+      };
+
+      // 1) Try to POST to your serverless endpoint (replace WEBHOOK_URL above)
+      if (WEBHOOK_URL && WEBHOOK_URL !== 'https://xchefbonuscoins.netlify.app/') {
+        try {
+          const res = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          if (res.ok) {
+            msg.textContent = 'Dankie — jou data is gestoor.';
+            form.reset();
+            return;
+          } else {
+            const text = await res.text();
+            console.warn('Server error:', text);
+            msg.textContent = 'Bediener fout. Data sal plaaslik gestoor word.';
+          }
+        } catch (err) {
+          console.warn('Post failed', err);
+          msg.textContent = 'Koppelingsfout. Data sal plaaslik gestoor word.';
+        }
+      }
+
+      // 2) Fallback: save locally in browser so you can test (not shared)
+      let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
+      local.push(data);
+      localStorage.setItem('xchef_regs', JSON.stringify(local));
+      msg.textContent = 'Gestoor in jou blaaier se lokaal. (Production: replace WEBHOOK_URL)';
+      form.reset();
+    });
+
+    // Helper: allow easy export of localStorage entries to CSV by visiting /?export=1
+    if (location.search.includes('export=1')) {
+      const rows = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
+      if (rows.length === 0) { document.body.innerHTML = '<pre>No local registrations found.</pre>'; }
+      else {
+        const keys = Object.keys(rows[0]);
+        const csv = [keys.join(',')].concat(rows.map(r => keys.map(k => '"' + (r[k] || '').toString().replace(/"/g,'""') + '"').join(','))).join('\n');
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const url = URL.createObjectURL(blob);
+        document.body.innerHTML = '<a href="'+url+'" download="xchef_regs.csv">Download registrations (CSV)</a>';
+      }
+    }
+  </script>
+</body>
+</html>
