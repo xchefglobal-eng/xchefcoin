@@ -21,19 +21,19 @@
 </head>
 <body>
   <div class="card">
-    <h1>Skryf in vir XCHEF Launch</h1>
-    <p class="subtitle">Vul asseblief jou besonderhede in om kans te staan op bonus-muntstukke.</p>
+    <h1>Register for XCHEF Launch</h1>
+    <p class="subtitle">Please fill in your details to have a chance to win bonus coins.</p>
 
     <form id="regForm">
-      <label for="firstname">Naam</label>
+      <label for="firstname">First Name</label>
       <input id="firstname" name="firstname" placeholder="Jan-Lucas" required>
 
-      <label for="lastname">Van</label>
+      <label for="lastname">Last Name</label>
       <input id="lastname" name="lastname" placeholder="Sandrock" required>
 
-      <label for="province">Provinsie</label>
+      <label for="province">Province</label>
       <select id="province" name="province" required>
-        <option value="">Kies provinsie...</option>
+        <option value="">Select province...</option>
         <option>Western Cape</option>
         <option>Eastern Cape</option>
         <option>KwaZulu-Natal</option>
@@ -45,10 +45,10 @@
         <option>North West</option>
       </select>
 
-      <label for="cell">Selfoon nommer</label>
+      <label for="cell">Phone Number</label>
       <input id="cell" name="cell" placeholder="082 767 7256" pattern="[0-9\s+()-]{7,20}" required>
 
-      <label for="wallet">Wallet address (opsioneel)</label>
+      <label for="wallet">Wallet Address (optional)</label>
       <input id="wallet" name="wallet" placeholder="0x..." >
 
       <button class="btn" type="submit">Submit</button>
@@ -57,7 +57,7 @@
     <div class="msg" id="message"></div>
 
     <hr style="margin:16px 0;border:none;border-top:1px solid rgba(255,255,255,0.06)">
-    <small>Hoe word data gestoor? Lees instruksies hieronder.</small>
+    <small>How is the data stored? Read instructions below.</small>
   </div>
 
   <script>
@@ -72,7 +72,7 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      msg.textContent = 'Stuur...';
+      msg.textContent = 'Sending...';
 
       const data = {
         firstname: form.firstname.value.trim(),
@@ -92,17 +92,17 @@
             body: JSON.stringify(data)
           });
           if (res.ok) {
-            msg.textContent = 'Dankie — jou data is gestoor.';
+            msg.textContent = 'Thank you — your data has been stored.';
             form.reset();
             return;
           } else {
             const text = await res.text();
             console.warn('Server error:', text);
-            msg.textContent = 'Bediener fout. Data sal plaaslik gestoor word.';
+            msg.textContent = 'Server error. Data will be stored locally.';
           }
         } catch (err) {
           console.warn('Post failed', err);
-          msg.textContent = 'Koppelingsfout. Data sal plaaslik gestoor word.';
+          msg.textContent = 'Connection error. Data will be stored locally.';
         }
       }
 
@@ -110,7 +110,7 @@
       let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
       local.push(data);
       localStorage.setItem('xchef_regs', JSON.stringify(local));
-      msg.textContent = 'Gestoor in jou blaaier se lokaal. (Production: replace WEBHOOK_URL)';
+      msg.textContent = 'Stored locally in your browser. (Production: replace WEBHOOK_URL)';
       form.reset();
     });
 
