@@ -116,7 +116,7 @@
 
   <label for="cell">Mobile Number</label>
   <input id="cell" name="cell" placeholder="082 767 7256"
-         pattern="[0-9\s()+-]{7,20}" required>
+         pattern="[0-9\s+()-]{7,20}" required>
 
   <label for="wallet">Wallet Address (optional)</label>
   <input id="wallet" name="wallet" placeholder="0x...">
@@ -127,7 +127,7 @@
 <div id="message"></div>
 
 <script>
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwRMToweEJkeTMKRBZQEQvTt1ZI837tPDkbKMYy10kU0HcVCCGMo8KXysT2ItrqoA0/exec";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz_RWnowYdUlJ6jYvWfBL7QKM_vb2Nml1P2hBa8ig6GqW_ry1iuUZlysZJEaftKGDBP/exec";
 
 const form = document.getElementById('regForm');
 const msg = document.getElementById('message');
