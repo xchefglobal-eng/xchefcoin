@@ -32,58 +32,48 @@
     .btn { margin-top:16px; padding:12px; width:100%; border-radius:10px; border:0; background:#fff; color:#111; font-weight:700; cursor:pointer; }
     .msg { margin-top:12px; font-size:14px; min-height:20px; }
     small { opacity:0.9; display:block; margin-top:16px; }
-    
+
     /* Spinner Coin */
     .spinner-container { display:none; flex-direction:column; align-items:center; justify-content:center; }
     .coin-glow {
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(circle at 30% 30%, #ffd700, #ffae00);
-  border-radius: 50%;
-  border: 3px solid #fff;
-  position: relative;
-  animation: spin 3s linear infinite, glow 2s ease-in-out infinite alternate;
-  box-shadow: 0 0 20px #ffd700, 0 0 40px #ffae00, 0 0 60px #ffda55;
-  margin-bottom: 16px;
-}
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #ffd700, #ffae00);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      position: relative;
+      animation: spin 3s linear infinite, glow 2s ease-in-out infinite alternate;
+      box-shadow: 0 0 20px #ffd700, 0 0 40px #ffae00, 0 0 60px #ffda55;
+      margin-bottom: 16px;
+    }
 
-/* Spin animation */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* Glow pulse animation */
-@keyframes glow {
-  0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #ffae00, 0 0 45px #ffda55; }
-  100% { box-shadow: 0 0 25px #ffd700, 0 0 50px #ffae00, 0 0 70px #ffda55; }
-}
+    @keyframes glow {
+      0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #ffae00, 0 0 45px #ffda55; }
+      100% { box-shadow: 0 0 25px #ffd700, 0 0 50px #ffae00, 0 0 70px #ffda55; }
+    }
 
-/* Optional sparkles */
-.coin-glow::before, .coin-glow::after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #fff;
-  border-radius: 50%;
-  top: 20%;
-  left: 80%;
-  box-shadow: 0 0 8px #fff, 0 0 15px #ffd700;
-  animation: sparkle 2s linear infinite;
-}
+    .coin-glow::before, .coin-glow::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      top: 20%;
+      left: 80%;
+      box-shadow: 0 0 8px #fff, 0 0 15px #ffd700;
+      animation: sparkle 2s linear infinite;
+    }
 
-.coin-glow::after {
-  top: 70%;
-  left: 10%;
-  animation-delay: 1s;
-}
+    .coin-glow::after { top: 70%; left: 10%; animation-delay: 1s; }
 
-@keyframes sparkle {
-  0% { transform: scale(0.5); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.5); opacity: 0.5; }
-}
+    @keyframes sparkle {
+      0% { transform: scale(0.5); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.5); opacity: 0.5; }
+    }
 
     .thank-you { font-size:18px; font-weight:700; }
   </style>
@@ -94,78 +84,78 @@
     <p class="subtitle">Fill in your details and get rewarded with xchefbonuscoins on LAUNCH DAY.</p>
 
     <form id="regForm">
-  <label for="firstname">First Name</label>
-  <input id="firstname" name="firstname" placeholder="Jan-Lucas" required>
+      <label for="firstname">First Name</label>
+      <input id="firstname" name="firstname" placeholder="Jan-Lucas" required>
 
-  <label for="lastname">Last Name</label>
-  <input id="lastname" name="lastname" placeholder="Sandrock" required>
+      <label for="lastname">Last Name</label>
+      <input id="lastname" name="lastname" placeholder="Sandrock" required>
 
-  <label for="province">Province</label>
-  <select id="province" name="province" required>
-    <option value="">Select province...</option>
-    <option>Western Cape</option>
-    <option>Eastern Cape</option>
-    <option>KwaZulu-Natal</option>
-    <option>Gauteng</option>
-    <option>Free State</option>
-    <option>Limpopo</option>
-    <option>Mpumalanga</option>
-    <option>Northern Cape</option>
-    <option>North West</option>
-  </select>
+      <label for="province">Province</label>
+      <select id="province" name="province" required>
+        <option value="">Select province...</option>
+        <option>Western Cape</option>
+        <option>Eastern Cape</option>
+        <option>KwaZulu-Natal</option>
+        <option>Gauteng</option>
+        <option>Free State</option>
+        <option>Limpopo</option>
+        <option>Mpumalanga</option>
+        <option>Northern Cape</option>
+        <option>North West</option>
+      </select>
 
-  <label for="cell">Mobile Number</label>
-  <input id="cell" name="cell" placeholder="082 767 7256"
-         pattern="[0-9\s()+\-]{7,20}" required>
+      <label for="cell">Mobile Number</label>
+      <input id="cell" name="cell" placeholder="082 767 7256"
+             pattern="[0-9\s()+\-]{7,20}" required>
 
-  <label for="wallet">Wallet Address (optional)</label>
-  <input id="wallet" name="wallet" placeholder="0x...">
+      <label for="wallet">Wallet Address (optional)</label>
+      <input id="wallet" name="wallet" placeholder="0x...">
 
-  <button type="submit">Submit</button>
-</form>
+      <button type="submit">Submit</button>
+    </form>
 
-<div id="message"></div>
+    <div id="message" class="msg"></div>
+  </div>
 
-<script>
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz_RWnowYdUlJ6jYvWfBL7QKM_vb2Nml1P2hBa8ig6GqW_ry1iuUZlysZJEaftKGDBP/exec";
+  <script>
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz_RWnowYdUlJ6jYvWfBL7QKM_vb2Nml1P2hBa8ig6GqW_ry1iuUZlysZJEaftKGDBP/exec";
+    const form = document.getElementById('regForm');
+    const msg = document.getElementById('message');
 
-const form = document.getElementById('regForm');
-const msg = document.getElementById('message');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Sending...';
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  msg.textContent = 'Sending...';
+      const data = {
+        firstname: form.firstname.value.trim(),
+        lastname: form.lastname.value.trim(),
+        province: form.province.value,
+        cell: form.cell.value.trim(),
+        wallet: form.wallet.value.trim()
+      };
 
-  const data = {
-    firstname: form.firstname.value.trim(),
-    lastname: form.lastname.value.trim(),
-    province: form.province.value,
-    cell: form.cell.value.trim(),
-    wallet: form.wallet.value.trim()
-  };
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
 
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+        const json = await res.json();
+        if (json.status === "success") {
+          msg.textContent = 'Thank you — your information has been sent and stored.';
+          form.reset();
+        } else {
+          msg.textContent = 'Server error: ' + json.message;
+        }
+      } catch (err) {
+        console.warn('Post failed', err);
+        msg.textContent = 'Connection error. Data will be stored locally.';
+        let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
+        local.push(data);
+        localStorage.setItem('xchef_regs', JSON.stringify(local));
+      }
     });
-    const json = await res.json();
-    if (json.status === "success") {
-      msg.textContent = 'Thank you — your information has been sent and stored.';
-      form.reset();
-    } else {
-      msg.textContent = 'Server error: ' + json.message;
-    }
-  } catch (err) {
-    console.warn('Post failed', err);
-    msg.textContent = 'Connection error. Data will be stored locally.';
-    let local = JSON.parse(localStorage.getItem('xchef_regs') || '[]');
-    local.push(data);
-    localStorage.setItem('xchef_regs', JSON.stringify(local));
-  }
-});
-</script>
-
+  </script>
 </body>
 </html>
